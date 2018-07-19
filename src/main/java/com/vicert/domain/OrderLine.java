@@ -6,8 +6,6 @@ import javax.persistence.*;
  * Created by petrovicu on 19/07/2018.
  */
 @Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-@SequenceGenerator(initialValue = 1, name = "idgen", sequenceName = "orderLineSeq")
 @Table(name = "ORDER_LINES")
 public class OrderLine extends BaseEntity {
 
