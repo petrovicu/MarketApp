@@ -18,8 +18,6 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
-//    @PostMapping("/createOrder")
-//    @ResponseBody
     @RequestMapping(value="/createOrder", method = RequestMethod.POST, headers="Accept=application/json;charset=utf-8")
     public ResponseEntity<RestResponseObject> createOrderById(@RequestBody TOOrder order) {
         return new ResponseEntity(order, HttpStatus.OK);
