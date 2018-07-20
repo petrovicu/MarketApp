@@ -3,17 +3,20 @@ package com.vicert.repository.impl;
 import com.vicert.domain.Order;
 import com.vicert.repository.OrderRepository;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.stereotype.Repository;
+
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 
 /**
  * Created by petrovicu on 19/07/2018.
  */
+@Repository
 public class OrderRepositoryImplementation extends BaseRepositoryImpl implements OrderRepository {
 
     @Override
-    public void createOrder(int id) {
-        persist(new Order());
+    public Integer createOrder(Order order) {
+        return persist(order).getId();
     }
 
     @Override

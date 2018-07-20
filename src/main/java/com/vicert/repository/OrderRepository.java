@@ -10,8 +10,17 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface OrderRepository extends BaseRepository<BaseEntity> {
 
-    public void createOrder(int id);
+    /**
+     *
+     * @param order
+     */
+    public Integer createOrder(Order order);
 
+    /**
+     *
+     * @param id
+     * @return
+     */
     public Order getOrderById(int id);
 
 }

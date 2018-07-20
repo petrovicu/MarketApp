@@ -1,7 +1,9 @@
 package com.vicert.service.impl;
 
 import com.vicert.domain.Order;
+import com.vicert.repository.OrderRepository;
 import com.vicert.service.OrderService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -13,13 +15,18 @@ import javax.transaction.Transactional;
 @Transactional
 public class OrderServiceImpl implements OrderService {
 
-    public Order createOrder(int id) {
-        System.out.printf("Order with id:%d successfully created.", id);
-        return new Order();
+    @Autowired
+    private OrderRepository orderRepository;
+
+    @Override
+    public Integer createOrder(Order order) {
+        Integer orderId = orderRepository.createOrder(order);
+        System.out.printf("Order with order ID:%d successfully created.", orderId);
+        return orderId;
     }
 
     @Override
-    public void getOrderWithProductById(int id) {
-        return;
+    public Order getOrderWithProductById(int id) {
+        return orderRepository.getOrderById(id);
     }
 }

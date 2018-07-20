@@ -13,17 +13,17 @@ import javax.transaction.Transactional;
 public interface OrderService {
 
     /**
-     * Creates an order with requested ID.
+     * Creates an order.
      *
-     * @param id
-     * @return
+     * @param order
+     * @return order id
      */
-    public Order createOrder(int id);
+    public Integer createOrder(Order order);
 
     /**
      * Returns an Order with corresponding Product data
      *
      * @param id
      */
-    public void getOrderWithProductById(int id);
+    public Order getOrderWithProductById(int id);
 }
