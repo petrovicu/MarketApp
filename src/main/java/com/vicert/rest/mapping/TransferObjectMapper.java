@@ -2,10 +2,14 @@ package com.vicert.rest.mapping;
 
 import com.vicert.domain.Customer;
 import com.vicert.domain.Order;
+import com.vicert.domain.OrderLine;
+import com.vicert.domain.Product;
 import com.vicert.exceptions.MarketAppException;
-import com.vicert.rest.transferobjects.TOCustomer;
-import com.vicert.rest.transferobjects.TOOrder;
+import com.vicert.rest.transferobjects.*;
+import org.javamoney.moneta.Money;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -19,7 +23,7 @@ public class TransferObjectMapper {
      */
     public static void mapTransferOrderToEntityOrder(TOOrder tOrder, Order eOrder) throws MarketAppException {
         if (tOrder == null) {
-            throw new MarketAppException("Transfer object is NULL");
+            throw new MarketAppException("Order transfer object is NULL");
         }
         if (eOrder == null) {
             eOrder = new Order();
@@ -27,17 +31,68 @@ public class TransferObjectMapper {
         eOrder.setRefId(UUID.randomUUID());
         eOrder.setOrderStatusId(tOrder.getOrderStatusId());
 
+        // Map customer part
         Customer eCustomer = new Customer();
         mapTransferCustomerToEntityCustomer(tOrder.getCustomer(), eCustomer);
         eOrder.setCustomer(eCustomer);
+
+        //Map OrderLines
+        if (tOrder.getOrderLines() != null && !tOrder.getOrderLines().isEmpty()) {
+            List<OrderLine> orderLines = new ArrayList<OrderLine>();
+            for (TOOrderLine tOrderLine : tOrder.getOrderLines()) {
+                OrderLine iOrderLine = new OrderLine();
+                iOrderLine.setQuantity(tOrderLine.getQuantity());
+                if (tOrderLine.getProduct() != null) {
+                    Product iProduct = new Product();
+                    iProduct.setName(tOrderLine.getProduct().getName());
+                    iProduct.setPrice(tOrderLine.getProduct().getPrice() != null ? Money.of(tOrderLine.getProduct().getPrice().getAmount(),
+                            tOrderLine.getProduct().getPrice().getCurrency().toString()) :
+                            null);
+                    iProduct.setRefId(UUID.randomUUID());
+                    iOrderLine.setProduct(iProduct);
+                }
+                iOrderLine.setOrder(eOrder);
+                orderLines.add(iOrderLine);
+            }
+            eOrder.setOrderLines(orderLines);
+        }
     }
 
     /**
      * @param eOrder
      * @param tOrder
      */
-    public static void mapEntityOrderToTransferOrder(Order eOrder, TOOrder tOrder) {
+    public static void mapEntityOrderToTransferOrder(Order eOrder, TOOrder tOrder) throws MarketAppException {
+        if (eOrder == null) {
+            throw new MarketAppException("DB ORDER entity is NULL");
+        }
+        if (tOrder == null) {
+            tOrder = new TOOrder();
+        }
+        tOrder.setOrderStatusId(eOrder.getOrderStatusId());
 
+        //Map customer
+        TOCustomer tCustomer = new TOCustomer();
+        mapEntityCustomerToTransferCustomer(eOrder.getCustomer(), tCustomer);
+        tOrder.setCustomer(tCustomer);
+
+        //Map OrderLines
+        if (eOrder.getOrderLines() != null && !eOrder.getOrderLines().isEmpty()) {
+            List<TOOrderLine> tOrderLines = new ArrayList<TOOrderLine>();
+            for (OrderLine eOrderLine : eOrder.getOrderLines()) {
+                TOOrderLine iOrderLine = new TOOrderLine();
+                iOrderLine.setQuantity(eOrderLine.getQuantity());
+                if (eOrderLine.getProduct() != null) {
+                    TOProduct iProduct = new TOProduct();
+                    iProduct.setName(eOrderLine.getProduct().getName());
+                    iProduct.setPrice(eOrderLine.getProduct().getPrice() != null ? new TOPrice(eOrderLine.getProduct().getPrice().getNumber().doubleValue(),
+                            ECurrency.valueOf(eOrderLine.getProduct().getPrice().getCurrency().getCurrencyCode())) : null);
+                    iOrderLine.setProduct(iProduct);
+                }
+                tOrderLines.add(iOrderLine);
+            }
+            tOrder.setOrderLines(tOrderLines);
+        }
     }
 
     /**
@@ -46,7 +101,7 @@ public class TransferObjectMapper {
      */
     public static void mapTransferCustomerToEntityCustomer(TOCustomer tCustomer, Customer eCustomer) throws MarketAppException {
         if (tCustomer == null) {
-            throw new MarketAppException("Transfer object is NULL");
+            throw new MarketAppException("Customer transfer object is NULL");
         }
         if (eCustomer == null) {
             eCustomer = new Customer();
@@ -61,7 +116,10 @@ public class TransferObjectMapper {
      * @param eCustomer
      * @param tCustomer
      */
-    public static void mapEntityCustomerToTransferCustomer(Customer eCustomer, TOCustomer tCustomer) {
+    public static void mapEntityCustomerToTransferCustomer(Customer eCustomer, TOCustomer tCustomer) throws MarketAppException {
+        if (eCustomer == null) {
+            throw new MarketAppException("DB CUSTOMER object object is NULL");
+        }
         if (tCustomer == null) {
             tCustomer = new TOCustomer();
         }
@@ -69,4 +127,6 @@ public class TransferObjectMapper {
         tCustomer.setEmail(eCustomer.getEmail());
         tCustomer.setPassword(eCustomer.getPassword());
     }
+
+
 }

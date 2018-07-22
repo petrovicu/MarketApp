@@ -1,5 +1,6 @@
 package com.vicert.repository.impl;
 
+import com.vicert.domain.Customer;
 import com.vicert.domain.Order;
 import com.vicert.repository.OrderRepository;
 import org.springframework.dao.EmptyResultDataAccessException;

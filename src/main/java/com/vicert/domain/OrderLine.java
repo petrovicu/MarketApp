@@ -11,10 +11,12 @@ public class OrderLine extends BaseEntity {
 
     private int quantity;
 
-    @Column(name = "order_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
-    @Column(name = "product_id", nullable = false)
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
     //******** GETTERS AND SETTERS ***********
