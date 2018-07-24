@@ -5,7 +5,7 @@ package com.klaymen.rest.transferobjects;
  */
 public class TOOrderLine {
 
-    private TOProduct product;
+    private int productId;
     private int quantity;
 
     /**
@@ -14,18 +14,18 @@ public class TOOrderLine {
     public TOOrderLine() {
     }
 
-    public TOOrderLine(TOProduct product, int quantity) {
-        this.product = product;
+    public TOOrderLine(int productId, int quantity) {
+        this.productId = productId;
         this.quantity = quantity;
     }
 
     //******** GETTERS AND SETTERS ***********
-    public TOProduct getProduct() {
-        return product;
+    public int getProductId() {
+        return productId;
     }
 
-    public void setProduct(TOProduct product) {
-        this.product = product;
+    public void setProductId(int productId) {
+        this.productId = productId;
     }
 
     public int getQuantity() {

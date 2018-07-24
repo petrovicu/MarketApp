@@ -1,9 +1,9 @@
 package com.klaymen.service.impl;
 
-import com.klaymen.domain.Customer;
-import com.klaymen.repository.AuthRepository;
+import com.klaymen.security.MarketAppAuthenticationProvider;
 import com.klaymen.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -16,10 +16,10 @@ import javax.transaction.Transactional;
 public class AuthServiceImpl implements AuthService {
 
     @Autowired
-    private AuthRepository authRepository;
+    private MarketAppAuthenticationProvider marketAppAuthenticationProvider;
 
     @Override
-    public Customer authenticateUser(String email, String password) {
-        return authRepository.authenticateUser(email, password);
+    public void authenticateUser(String email, String password) {
+        marketAppAuthenticationProvider.authenticate(new UsernamePasswordAuthenticationToken(email, password));
     }
 }

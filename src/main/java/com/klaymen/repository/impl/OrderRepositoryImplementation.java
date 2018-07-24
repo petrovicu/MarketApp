@@ -16,13 +16,13 @@ public class OrderRepositoryImplementation extends BaseRepositoryImpl implements
 
     @Override
     public Integer createOrder(Order order) {
-        return persist(order).getId();
+        return save(order).getId();
     }
 
     @Override
     public Order getOrderById(int id) {
         TypedQuery<Order> q = em.createQuery(
-                "from Order order where order.id = :id", Order.class);
+                "FROM Order order WHERE order.id = :id", Order.class);
         q.setParameter("id", id);
         try {
             return (Order) q.getSingleResult();

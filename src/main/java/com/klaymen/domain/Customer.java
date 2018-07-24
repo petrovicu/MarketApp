@@ -15,7 +15,7 @@ public class Customer extends BaseEntity {
     @Column(name = "ref_id", nullable = false)
     private UUID refId;
 
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     @Column(name = "address", nullable = false)

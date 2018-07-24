@@ -1,10 +1,7 @@
 package com.klaymen.security;
 
 import com.klaymen.domain.Customer;
-import com.klaymen.service.AuthService;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import com.klaymen.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -14,10 +11,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
-import javax.annotation.PostConstruct;
-import javax.jws.WebMethod;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,10 +21,9 @@ import java.util.List;
 @Component
 public class MarketAppAuthenticationProvider implements AuthenticationProvider {
 
-    private static final Logger LOGGER = LogManager.getLogger(MarketAppAuthenticationProvider.class);
 
     @Autowired
-    private AuthService authService;
+    private CustomerService customerService;
 
     @Override
     public Authentication authenticate(Authentication auth) throws AuthenticationException {
@@ -39,11 +32,10 @@ public class MarketAppAuthenticationProvider implements AuthenticationProvider {
 
         List<GrantedAuthority> grantedAuths = new ArrayList<GrantedAuthority>();
 
-        Customer dbCustomer = authService.authenticateUser(email, password);
+        Customer dbCustomer = customerService.authenticateCustomer(email, password);
         if (dbCustomer != null) {
             grantedAuths.add(new SimpleGrantedAuthority(UserRights.VALID_CUSTOMER.getValue()));
         } else {
-            LOGGER.log(Level.DEBUG, "Customer authentication failed for: " + email);
             throw new BadCredentialsException("Customer authentication failed");
         }
 

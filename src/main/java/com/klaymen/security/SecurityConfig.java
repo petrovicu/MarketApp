@@ -6,6 +6,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.savedrequest.NullRequestCache;
 
 /**
  * Created by petrovicu on 23/07/2018.
@@ -26,13 +27,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/secured/**").hasRole(UserRights.VALID_CUSTOMER.getValue())
+                .antMatchers("/auth/**").permitAll()
+                .antMatchers("/h2_console/**").permitAll()
+                .antMatchers("/secured/**").authenticated()
+                .anyRequest().authenticated()
                 .and()
-                .authorizeRequests().antMatchers("/auth/**").permitAll()
+                .requestCache()
+                .requestCache(new NullRequestCache())
                 .and().httpBasic();
-    }
 
-//    public HttpSessionStrategy httpSessionStrategy() {
-//        return new HeaderHttpSessionStrategy();
-//    }
+        //These are needed to enable H2 console
+        http.csrf().disable();
+        http.headers().frameOptions().disable();
+    }
 }

@@ -17,5 +17,5 @@ public interface AuthService {
      * @param email
      * @param password
      */
-    public Customer authenticateUser(String email, String password);
+    public void authenticateUser(String email, String password);
 }

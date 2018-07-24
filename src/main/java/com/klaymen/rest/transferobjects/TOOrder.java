@@ -7,7 +7,7 @@ import java.util.List;
  */
 public class TOOrder {
 
-    private TOCustomer customer;
+//    private int customerId;
     private String orderStatusId;
     private List<TOOrderLine> orderLines;
 
@@ -17,20 +17,20 @@ public class TOOrder {
     public TOOrder() {
     }
 
-    public TOOrder(TOCustomer customer, String orderStatusId, List<TOOrderLine> orderLines) {
-        this.customer = customer;
+    public TOOrder(int customerId, String orderStatusId, List<TOOrderLine> orderLines) {
+//        this.customerId = customerId;
         this.orderStatusId = orderStatusId;
         this.orderLines = orderLines;
     }
 
     //******** GETTERS AND SETTERS ***********
-    public TOCustomer getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(TOCustomer customer) {
-        this.customer = customer;
-    }
+//    public int getCustomerId() {
+//        return customerId;
+//    }
+//
+//    public void setCustomerId(int customerId) {
+//        this.customerId = customerId;
+//    }
 
     public String getOrderStatusId() {
         return orderStatusId;
