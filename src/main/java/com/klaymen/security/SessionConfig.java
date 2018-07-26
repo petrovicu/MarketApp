@@ -28,7 +28,7 @@ public class SessionConfig {
 
     @Bean
     public HttpSessionIdResolver httpSessionIdResolver() {
-        return HeaderHttpSessionIdResolver.xAuthToken();
+        return new HeaderHttpSessionIdResolver("X-Auth-Token");
     }
 
     @Bean

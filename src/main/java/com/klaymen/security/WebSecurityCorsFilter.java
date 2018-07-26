@@ -18,8 +18,8 @@ public class WebSecurityCorsFilter extends OncePerRequestFilter {
     @Override
     public void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
             throws IOException, ServletException {
-        res.setHeader("Access-Control-Expose-Headers", "x-auth-token");
-        res.setHeader("Access-Control-Allow-Credentials", "x-auth-token");
+        res.setHeader("Access-Control-Expose-Headers", "X-Auth-Token");
+        res.setHeader("Access-Control-Allow-Credentials", "X-Auth-Token");
 
         chain.doFilter(req, res);
     }
