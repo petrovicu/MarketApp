@@ -1,9 +1,9 @@
 package com.klaymen.rest.transferobjects;
 
 /**
- * Created by petrovicu on 19/07/2018.
+ * Created by petrovicu on 26/07/2018.
  */
-public class TOOrderLine {
+public class TOOrderLineRequest {
 
     private int productId;
     private int quantity;
@@ -11,10 +11,10 @@ public class TOOrderLine {
     /**
      * For serialization
      */
-    public TOOrderLine() {
+    public TOOrderLineRequest() {
     }
 
-    public TOOrderLine(int productId, int quantity) {
+    public TOOrderLineRequest(int productId, int quantity) {
         this.productId = productId;
         this.quantity = quantity;
     }
@@ -35,4 +35,5 @@ public class TOOrderLine {
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
+
 }

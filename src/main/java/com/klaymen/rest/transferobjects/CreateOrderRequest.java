@@ -5,33 +5,23 @@ import java.util.List;
 /**
  * Created by petrovicu on 19/07/2018.
  */
-public class TOOrder {
+public class CreateOrderRequest {
 
-//    private int customerId;
     private String orderStatusId;
-    private List<TOOrderLine> orderLines;
+    private List<TOOrderLineRequest> orderLines;
 
     /**
      * For serialization
      */
-    public TOOrder() {
+    public CreateOrderRequest() {
     }
 
-    public TOOrder(int customerId, String orderStatusId, List<TOOrderLine> orderLines) {
-//        this.customerId = customerId;
+    public CreateOrderRequest(String orderStatusId, List<TOOrderLineRequest> orderLines) {
         this.orderStatusId = orderStatusId;
         this.orderLines = orderLines;
     }
 
     //******** GETTERS AND SETTERS ***********
-//    public int getCustomerId() {
-//        return customerId;
-//    }
-//
-//    public void setCustomerId(int customerId) {
-//        this.customerId = customerId;
-//    }
-
     public String getOrderStatusId() {
         return orderStatusId;
     }
@@ -40,11 +30,11 @@ public class TOOrder {
         this.orderStatusId = orderStatusId;
     }
 
-    public List<TOOrderLine> getOrderLines() {
+    public List<TOOrderLineRequest> getOrderLines() {
         return orderLines;
     }
 
-    public void setOrderLines(List<TOOrderLine> orderLines) {
+    public void setOrderLines(List<TOOrderLineRequest> orderLines) {
         this.orderLines = orderLines;
     }
 }

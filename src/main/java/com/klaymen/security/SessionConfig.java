@@ -5,7 +5,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.session.data.redis.config.ConfigureRedisAction;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
+import org.springframework.session.web.http.HeaderHttpSessionIdResolver;
 import org.springframework.session.web.http.HeaderHttpSessionStrategy;
+import org.springframework.session.web.http.HttpSessionIdResolver;
 
 /**
  * Created by petrovicu on 24/07/2018.
@@ -19,20 +21,18 @@ public class SessionConfig {
         return ConfigureRedisAction.NO_OP;
     }
 
-    /**
-     *
-     * @return
-     */
     @Bean
     public HeaderHttpSessionStrategy httpSessionStrategy() {
         return new HeaderHttpSessionStrategy();
     }
 
     @Bean
+    public HttpSessionIdResolver httpSessionIdResolver() {
+        return HeaderHttpSessionIdResolver.xAuthToken();
+    }
+
+    @Bean
     public JedisConnectionFactory redisConnectionFactory() {
-        JedisConnectionFactory redisConnectionFactory = new JedisConnectionFactory();
-        redisConnectionFactory.setHostName("127.0.0.1");
-        redisConnectionFactory.setPort(6379);
-        return redisConnectionFactory;
+        return new JedisConnectionFactory();
     }
 }

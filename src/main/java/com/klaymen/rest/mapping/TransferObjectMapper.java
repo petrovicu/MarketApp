@@ -4,9 +4,7 @@ import com.klaymen.domain.Customer;
 import com.klaymen.domain.Order;
 import com.klaymen.domain.OrderLine;
 import com.klaymen.exceptions.MarketAppException;
-import com.klaymen.rest.transferobjects.TOCustomer;
-import com.klaymen.rest.transferobjects.TOOrder;
-import com.klaymen.rest.transferobjects.TOOrderLine;
+import com.klaymen.rest.transferobjects.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,23 +16,23 @@ import java.util.UUID;
 public class TransferObjectMapper {
 
     /**
-     * @param tOrder
+     * @param createOrderRequest
      * @param eOrder
      */
-    public static void mapTransferOrderToEntityOrder(TOOrder tOrder, Order eOrder) throws MarketAppException {
-        if (tOrder == null) {
+    public static void mapTransferOrderToEntityOrder(CreateOrderRequest createOrderRequest, Order eOrder) throws MarketAppException {
+        if (createOrderRequest == null) {
             throw new MarketAppException("Order transfer object is NULL");
         }
         if (eOrder == null) {
             eOrder = new Order();
         }
         eOrder.setRefId(UUID.randomUUID());
-        eOrder.setOrderStatusId(tOrder.getOrderStatusId());
+        eOrder.setOrderStatusId(createOrderRequest.getOrderStatusId());
 
         //Map OrderLines
-//        if (tOrder.getOrderLines() != null && !tOrder.getOrderLines().isEmpty()) {
+//        if (createOrderRequest.getOrderLines() != null && !createOrderRequest.getOrderLines().isEmpty()) {
 //            List<OrderLine> orderLines = new ArrayList<OrderLine>();
-//            for (TOOrderLine tOrderLine : tOrder.getOrderLines()) {
+//            for (TOOrderLine tOrderLine : createOrderRequest.getOrderLines()) {
 //                OrderLine iOrderLine = new OrderLine();
 //                iOrderLine.setQuantity(tOrderLine.getQuantity());
 //                if (tOrderLine.getProduct() != null) {
@@ -55,29 +53,30 @@ public class TransferObjectMapper {
 
     /**
      * @param eOrder
-     * @param tOrder
+     * @param getOrderResponse
      */
-    public static void mapEntityOrderToTransferOrder(Order eOrder, TOOrder tOrder) throws MarketAppException {
+    public static void mapEntityOrderToTransferOrder(Order eOrder, GetOrderResponse getOrderResponse) throws MarketAppException {
         if (eOrder == null) {
             throw new MarketAppException("DB ORDER entity is NULL");
         }
-        if (tOrder == null) {
-            tOrder = new TOOrder();
+        if (getOrderResponse == null) {
+            getOrderResponse = new GetOrderResponse();
         }
-        tOrder.setOrderStatusId(eOrder.getOrderStatusId());
+        getOrderResponse.setOrderStatusId(eOrder.getOrderStatusId());
 
         //Map OrderLines
         if (eOrder.getOrderLines() != null && !eOrder.getOrderLines().isEmpty()) {
-            List<TOOrderLine> tOrderLines = new ArrayList<TOOrderLine>();
+            List<TOOrderLineResponse> tOrderLines = new ArrayList<TOOrderLineResponse>();
             for (OrderLine eOrderLine : eOrder.getOrderLines()) {
-                TOOrderLine iOrderLine = new TOOrderLine();
+                TOOrderLineResponse iOrderLine = new TOOrderLineResponse();
                 iOrderLine.setQuantity(eOrderLine.getQuantity());
                 if (eOrderLine.getProduct() != null) {
-                    iOrderLine.setProductId(eOrderLine.getProduct().getId());
+                    iOrderLine.setProduct(new TOProduct(new TOPrice(eOrderLine.getProduct().getPrice().getNumber().doubleValue(),
+                            ECurrency.valueOf(eOrderLine.getProduct().getPrice().getCurrency().getCurrencyCode())), eOrderLine.getProduct().getName()));
                 }
                 tOrderLines.add(iOrderLine);
             }
-            tOrder.setOrderLines(tOrderLines);
+            getOrderResponse.setOrderLines(tOrderLines);
 
 //        if (eOrder.getOrderLines() != null && !eOrder.getOrderLines().isEmpty()) {
 //            List<TOOrderLine> tOrderLines = new ArrayList<TOOrderLine>();
@@ -93,15 +92,15 @@ public class TransferObjectMapper {
 //                }
 //                tOrderLines.add(iOrderLine);
 //            }
-//            tOrder.setOrderLines(tOrderLines);
+//            getOrderResponse.setOrderLines(tOrderLines);
 //        }
         }
     }
 
-        /**
-         * @param tCustomer
-         * @param eCustomer
-         */
+    /**
+     * @param tCustomer
+     * @param eCustomer
+     */
 
     public static void mapTransferCustomerToEntityCustomer(TOCustomer tCustomer, Customer eCustomer) throws MarketAppException {
         if (tCustomer == null) {

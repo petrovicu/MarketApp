@@ -10,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -20,7 +21,6 @@ import java.util.List;
  */
 @Component
 public class MarketAppAuthenticationProvider implements AuthenticationProvider {
-
 
     @Autowired
     private CustomerService customerService;
@@ -39,8 +39,11 @@ public class MarketAppAuthenticationProvider implements AuthenticationProvider {
             throw new BadCredentialsException("Customer authentication failed");
         }
 
-        return new UsernamePasswordAuthenticationToken(email, auth.getCredentials(),
-                grantedAuths);
+        Authentication user = new UsernamePasswordAuthenticationToken(email, auth.getCredentials(), grantedAuths);
+        // Add the authentication to the Security context
+        SecurityContextHolder.getContext().setAuthentication(user);
+
+        return user;
 
     }
 

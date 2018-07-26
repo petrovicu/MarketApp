@@ -5,9 +5,10 @@ import com.klaymen.domain.Order;
 import com.klaymen.domain.OrderLine;
 import com.klaymen.exceptions.MarketAppException;
 import com.klaymen.rest.mapping.TransferObjectMapper;
+import com.klaymen.rest.transferobjects.CreateOrderRequest;
+import com.klaymen.rest.transferobjects.GetOrderResponse;
 import com.klaymen.rest.transferobjects.RestResponseObject;
-import com.klaymen.rest.transferobjects.TOOrder;
-import com.klaymen.rest.transferobjects.TOOrderLine;
+import com.klaymen.rest.transferobjects.TOOrderLineRequest;
 import com.klaymen.service.CustomerService;
 import com.klaymen.service.OrderService;
 import com.klaymen.service.ProductService;
@@ -36,16 +37,17 @@ public class OrderEndpoint {
     private ProductService productService;
 
     @RequestMapping(value = "/createOrder", method = RequestMethod.POST, headers = "Accept=application/json;charset=utf-8")
-    public ResponseEntity<RestResponseObject> createOrder(@RequestBody TOOrder tOrder) {
+    public ResponseEntity<RestResponseObject> createOrder(@RequestBody CreateOrderRequest createOrderRequest) {
         try {
             Order newOrder = new Order();
 
             // Map transfer Order -> entity Order
-            TransferObjectMapper.mapTransferOrderToEntityOrder(tOrder, newOrder);
+            TransferObjectMapper.mapTransferOrderToEntityOrder(createOrderRequest, newOrder);
 
-            if (tOrder.getOrderLines() != null && !tOrder.getOrderLines().isEmpty()) {
+            // Map order lines
+            if (createOrderRequest.getOrderLines() != null && !createOrderRequest.getOrderLines().isEmpty()) {
                 List<OrderLine> orderLines = new ArrayList<>();
-                for (TOOrderLine tLine : tOrder.getOrderLines()) {
+                for (TOOrderLineRequest tLine : createOrderRequest.getOrderLines()) {
                     OrderLine newLine = new OrderLine();
                     newLine.setOrder(newOrder);
                     newLine.setQuantity(tLine.getQuantity());
@@ -82,13 +84,13 @@ public class OrderEndpoint {
             return new ResponseEntity(new RestResponseObject(false, "Non-proper customer id. Dear customer, you cannot fetch this order"),
                     HttpStatus.NOT_ACCEPTABLE);
         }
-        TOOrder tOrder = new TOOrder();
+        GetOrderResponse getOrderResponse = new GetOrderResponse();
         try {
-            TransferObjectMapper.mapEntityOrderToTransferOrder(dbOrder, tOrder);
+            TransferObjectMapper.mapEntityOrderToTransferOrder(dbOrder, getOrderResponse);
         } catch (MarketAppException e1) {
             return new ResponseEntity(new RestResponseObject(false, "Error mapping transfer objects"),
                     HttpStatus.NOT_ACCEPTABLE);
         }
-        return new ResponseEntity(tOrder, HttpStatus.OK);
+        return new ResponseEntity(getOrderResponse, HttpStatus.OK);
     }
 }

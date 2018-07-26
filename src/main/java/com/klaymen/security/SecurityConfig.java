@@ -6,6 +6,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.savedrequest.NullRequestCache;
 
 /**
@@ -36,8 +37,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .requestCache(new NullRequestCache())
                 .and().httpBasic();
 
-        //These are needed to enable H2 console
+        //These are needed to enable H2 console - it runs inside a frame
         http.csrf().disable();
         http.headers().frameOptions().disable();
+
+        //No cookies
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 }
